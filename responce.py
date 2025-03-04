@@ -9,8 +9,7 @@ genai.configure(api_key=GOOGLE_TOKEN)
 model = genai.GenerativeModel("gemini-2.0-flash")
 
 def get_response(user_input: str):
-    """Generates a response using Gemini AI"""
-
+    
     if not user_input.strip():
         return "Please enter a valid message."
 
