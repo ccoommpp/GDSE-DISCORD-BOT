@@ -17,6 +17,7 @@ intents.message_content = True
 intents.members = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
+bot_talk = commands.Bot(command_prefix="|", intents=intents)
 
 reminders = {}  # Dictionary to track reminders
 
@@ -187,9 +188,18 @@ async def stop(ctx):
 
 #------------------------CLEAR-----------------------------#
 @bot.command()
-async def clearall(ctx):
-    await ctx.channel.purge()#delets 100 messages
-    
+async def clear(ctx, limit: int = 5):
+    await ctx.channel.purge(limit=limit)
+
+@bot.command()
+async def clear_all(ctx, limit: int = 100):
+    for channel in ctx.guild.channels:
+        if isinstance(channel, discord.TextChannel):
+            try:
+                await channel.purge(limit=limit)
+            except Exception as e:  
+                print(f"Error: {e}")
+                
 # -------------------- On Message Event -------------------- #
 
 @bot.event
@@ -200,13 +210,15 @@ async def on_message(message: discord.Message):
     if message.content.startswith("!"):
         await bot.process_commands(message)
         return
-
-    response = get_response(message.content)
-
-    if response:
-        await message.channel.send(response)
-
-    await bot.process_commands(message)
+    
+    if(message.content==""):
+        return
+    
+    if message.content.startswith("|"):
+        response = get_response(message.content)
+        if response:
+            await message.channel.send(response)
+            await bot.process_commands(message)
 
 # -------------------- Run the Bot -------------------- #
 
