@@ -70,6 +70,9 @@ async def poll(ctx, question: str, *options):
         await poll.add_reaction(emojis[i])
 
 # -------------------- Reminder Command -------------------- #
+async def send_reminder(ctx, delay, reminder_message):
+    await asyncio.sleep(delay)
+    await ctx.send(f"{ctx.author.mention}, Reminder: {reminder_message}")
 
 @bot.command()
 async def remind(ctx, date_time: str, *, reminder_message: str):
@@ -86,10 +89,9 @@ async def remind(ctx, date_time: str, *, reminder_message: str):
             return
 
         await ctx.send(f"Reminder set for {ctx.author.mention} at {date_time}: {reminder_message}")
-
+        reminders[ctx.author.id] = asyncio.create_task(send_reminder(ctx, delay, reminder_message))
         # Wait for the reminder time
-        await asyncio.sleep(delay)
-        await ctx.send(f"{ctx.author.mention}, Reminder: {reminder_message}")
+        await reminders[ctx.author.id]
 
     except ValueError:
         await ctx.send("Invalid format! Use: `YYYY-MM-DD HH:MM` (24-hour format)")
@@ -99,7 +101,6 @@ async def remind(ctx, date_time: str, *, reminder_message: str):
 @bot.command()
 async def cancel_reminder(ctx):
     task = reminders.get(ctx.author.id)
-
     if task and not task.done():
         task.cancel()
         del reminders[ctx.author.id]
