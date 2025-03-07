@@ -17,7 +17,6 @@ intents.message_content = True
 intents.members = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
-bot_talk = commands.Bot(command_prefix="|", intents=intents)
 
 reminders = {}  # Dictionary to track reminders
 
@@ -131,7 +130,8 @@ async def leave(ctx):
     else:
         await ctx.send("I'm not in a voice channel!")
 
-# -------------------- Music Commands -------------------- #
+
+# -------------------- Music Commands For Youtube -------------------- #
 
 @bot.command()
 async def play(ctx, url: str):
@@ -199,7 +199,7 @@ async def clear_all(ctx, limit: int = 100):
                 await channel.purge(limit=limit)
             except Exception as e:  
                 print(f"Error: {e}")
-                
+
 # -------------------- On Message Event -------------------- #
 
 @bot.event
