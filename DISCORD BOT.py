@@ -214,11 +214,17 @@ async def on_message(message: discord.Message):
     if(message.content==""):
         return
     
-    if message.content.startswith("|"):
+    if(message.content.startswith("?")):
+        response = get_response(message.content)
+        if response:
+            await message.author.send(response)
+            await message.channel.purge(limit=1)
+
+    
+    if message.content.startswith("~"):
         response = get_response(message.content)
         if response:
             await message.channel.send(response)
-            await bot.process_commands(message)
 
 # -------------------- Run the Bot -------------------- #
 
