@@ -40,6 +40,7 @@ This is the main file for the Discord bot. It includes the setup, event handlers
 - **On Message Event**
   - Handles incoming messages and processes commands.
   - Generates responses using the `get_response` function from `responce.py`.
+  - For private chat with bot use '?'.
 
 ### `responce.py`
 
